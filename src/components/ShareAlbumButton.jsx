@@ -1,20 +1,22 @@
 import React, { useRef, useState } from "react";
 
-const ShareAlbumButton = ({ userId }) => {
+const ShareAlbumButton = ({ user }) => {
   const [showToast, setShowToast] = useState(false);
   const [toastMessage, setToastMessage] = useState("");
   const toastTimer = useRef(null);
 
-  const handleShare = async () => {
-    if (!userId) return;
+  const userName = user?.displayName || 'mi álbum';
 
-    const shareUrl = `${window.location.origin}/match/${userId}`;
-    const shareText = "¡Mira mis repetidas del álbum y comparemos qué nos falta!";
+  const handleShare = async () => {
+    if (!user) return;
+
+    const shareUrl = `${window.location.origin}/match/${user.uid}`;
+    const shareText = "¡Mira mi progreso y las repetidas que tengo para intercambiar en mi álbum digital!";
 
     if (navigator.share) {
       try {
         await navigator.share({
-          title: "Mi Álbum Panini",
+          title: `Álbum Mundial 2026 - ${userName}`,
           text: shareText,
           url: shareUrl,
         });

@@ -8,7 +8,6 @@ const SyncStatus = ({ isSyncing }) => {
         title="Sincronizando cambios..."
       >
         <span className="inline-block h-2 w-2 animate-spin rounded-full border-2 border-amber-400 border-t-transparent" />
-        Guardando...
       </div>
     );
   }
@@ -19,7 +18,6 @@ const SyncStatus = ({ isSyncing }) => {
       title="Todos los cambios guardados"
     >
       <span>☁️✓</span>
-      Sincronizado
     </div>
   );
 };

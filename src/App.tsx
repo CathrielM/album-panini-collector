@@ -15,6 +15,7 @@ function App() {
 
   const [searchValue, setSearchValue] = useState("");
   const [highlightedId, setHighlightedId] = useState<number | null>(null);
+  const [filterCountry, setFilterCountry] = useState<string | null>(null);
   const [toastMessage, setToastMessage] = useState("");
   const toastTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
@@ -50,16 +51,29 @@ function App() {
 
   const handleSearchSubmit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    const numberValue = Number(searchValue);
-    const isValid = Number.isInteger(numberValue) && numberValue >= 1 && numberValue <= 980;
+    const trimmedValue = searchValue.trim().toUpperCase();
 
-    if (!isValid) {
-      setToastMessage("Número no válido");
+    if (!trimmedValue) return;
+
+    // Si es número, ir directo a ese ID
+    const numberValue = Number(trimmedValue);
+    if (Number.isInteger(numberValue) && numberValue >= 1 && numberValue <= 980) {
+      setHighlightedId(numberValue);
+      setFilterCountry(null);
       setSearchValue("");
       return;
     }
 
-    setHighlightedId(numberValue);
+    // Si es código de país, filtrar ese país
+    const countryCodes = ["MEX", "RSA", "KOR", "CZE", "CAN", "BIH", "QAT", "SUI", "BRA", "MAR", "HAI", "SCO", "USA", "PAR", "AUS", "TUR", "GER", "CUW", "CIV", "ECU", "NED", "JPN", "SWE", "TUN", "BEL", "EGY", "IRN", "NZL", "ESP", "CPV", "KSA", "URU", "FRA", "SEN", "TBD", "NOR", "ARG", "ALG", "AUT", "JOR", "POR", "TBD2", "UZB", "COL", "ENG", "CRO", "GHA", "PAN"];
+    if (countryCodes.includes(trimmedValue)) {
+      setFilterCountry(trimmedValue);
+      setHighlightedId(null);
+      setSearchValue("");
+      return;
+    }
+
+    setToastMessage("Buscar por número (1-980) o código de país (ej: MEX)");
     setSearchValue("");
   };
 
@@ -78,12 +92,10 @@ function App() {
             <span className="text-slate-400">#</span>
             <input
               id="figure-search"
-              type="number"
-              min="1"
-              max="980"
+              type="text"
               value={searchValue}
-              onChange={(event) => setSearchValue(event.target.value.replace(/\D/g, ""))}
-              placeholder="Buscar figura"
+              onChange={(event) => setSearchValue(event.target.value)}
+              placeholder="Buscar figura o país"
               className="w-full bg-transparent text-sm text-slate-100 outline-none placeholder:text-slate-500"
             />
             <button
@@ -100,9 +112,9 @@ function App() {
           </form>
           <div className="flex items-center gap-2 sm:gap-3">
             <SyncStatus isSyncing={isSyncing} />
-            {user && <ShareAlbumButton userId={user.uid} />}
+            {user && <ShareAlbumButton user={user} />}
             {user ? (
-              <span className="text-sm text-slate-300">Usuario: {user.displayName ?? user.email}</span>
+              <span className="text-sm text-slate-300">{user.displayName ?? user.email}</span>
             ) : (
               <button
                 type="button"
@@ -138,7 +150,7 @@ function App() {
           {albumLoading ? (
             <AlbumGridSkeleton />
           ) : (
-            <AlbumGrid album={album} toggleFigura={toggleFigura} highlightedId={highlightedId} />
+            <AlbumGrid album={album} toggleFigura={toggleFigura} highlightedId={highlightedId} filterCountry={filterCountry} />
           )}
         </div>
       </main>
