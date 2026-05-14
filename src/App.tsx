@@ -3,10 +3,10 @@ import { useEffect, useRef, useState } from "react";
 import "./App.css";
 import ShareAlbumButton from "./components/ShareAlbumButton.jsx";
 import SyncStatus from "./components/SyncStatus.jsx";
-import AlbumGrid from "./components/AlbumGrid.jsx";
+import AlbumGrid from "./components/AlbumGrid.tsx";
 import AlbumGridSkeleton from "./components/AlbumGridSkeleton.jsx";
 import useAlbum from "./hooks/useAlbum.js";
-import useAuth from "./hooks/useAuth.js";
+import useAuth from "./hooks/useAuth.ts";
 
 function App() {
   const { user, loading: authLoading, login } = useAuth();

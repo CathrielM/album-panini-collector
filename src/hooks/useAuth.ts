@@ -5,18 +5,26 @@ import {
   onAuthStateChanged,
   signInWithPopup,
   signOut,
+  User as FirebaseUser,
 } from "firebase/auth";
 import app from "../config/firebase.js";
+
+type AuthUser = {
+  uid: string;
+  displayName: string | null;
+  email: string | null;
+  photoURL: string | null;
+};
 
 const auth = getAuth(app);
 const provider = new GoogleAuthProvider();
 
 const useAuth = () => {
-  const [user, setUser] = useState(null);
+  const [user, setUser] = useState<AuthUser | null>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (firebaseUser) => {
+    const unsubscribe = onAuthStateChanged(auth, (firebaseUser: FirebaseUser | null) => {
       setUser(
         firebaseUser
           ? {

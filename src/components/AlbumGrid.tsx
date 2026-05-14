@@ -1,14 +1,27 @@
-import React, { memo, useCallback, useEffect, useState } from "react";
+import { memo, useCallback, useEffect, useState } from "react";
 
 const ALBUM_SIZE = 980;
-const statusStyles = {
+const statusStyles: Record<number, string> = {
   0: "bg-slate-200 text-slate-700",
   1: "bg-blue-500 text-white",
   2: "bg-green-500 text-white",
 };
 
+type AlbumCellProps = {
+  id: number;
+  tipo: number;
+  onToggle: (id: number, tipo: number) => void;
+  isHighlighted: boolean;
+};
+
+type AlbumGridProps = {
+  album?: number[];
+  toggleFigura: (id: number, tipo: number) => void;
+  highlightedId: number | null;
+};
+
 const AlbumCell = memo(
-  ({ id, tipo, onToggle, isHighlighted }) => {
+  ({ id, tipo, onToggle, isHighlighted }: AlbumCellProps) => {
     const label = tipo === 2 ? "X2" : id;
     const highlightStyles = isHighlighted ? "ring-2 ring-amber-400" : "";
 
@@ -26,8 +39,8 @@ const AlbumCell = memo(
   (prevProps, nextProps) => prevProps.tipo === nextProps.tipo && prevProps.isHighlighted === nextProps.isHighlighted
 );
 
-const AlbumGrid = ({ album = [], toggleFigura, highlightedId }) => {
-  const [activeHighlightId, setActiveHighlightId] = useState(null);
+const AlbumGrid = ({ album = [], toggleFigura, highlightedId }: AlbumGridProps) => {
+  const [activeHighlightId, setActiveHighlightId] = useState<number | null>(null);
 
   useEffect(() => {
     if (!highlightedId) return;
@@ -50,7 +63,7 @@ const AlbumGrid = ({ album = [], toggleFigura, highlightedId }) => {
   }, [highlightedId]);
 
   const handleToggle = useCallback(
-    (id, tipo) => {
+    (id: number, tipo: number) => {
       toggleFigura(id, tipo);
     },
     [toggleFigura]
