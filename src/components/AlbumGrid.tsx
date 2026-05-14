@@ -144,28 +144,6 @@ type FiguraMetadata = {
   grupo: string;
 };
 
-const ALBUM_STRUCTURE = {
-  special: {
-    startId: 1,
-    endId: 20,
-    sections: [
-      { name: "Especiales", start: 1, end: 5 },
-      { name: "Balones", start: 6, end: 9 },
-      { name: "Historia", start: 10, end: 20 },
-    ],
-  },
-  groups: GRUPOS_2026.map((group, groupIndex) => ({
-    ...group,
-    startId: 21 + groupIndex * COUNTRIES_PER_GROUP * FIGURES_PER_COUNTRY,
-    endId: 20 + (groupIndex + 1) * COUNTRIES_PER_GROUP * FIGURES_PER_COUNTRY,
-    countries: group.countries.map((country, countryIndex) => ({
-      ...country,
-      startId: 21 + groupIndex * COUNTRIES_PER_GROUP * FIGURES_PER_COUNTRY + countryIndex * FIGURES_PER_COUNTRY,
-      endId: 20 + groupIndex * COUNTRIES_PER_GROUP * FIGURES_PER_COUNTRY + (countryIndex + 1) * FIGURES_PER_COUNTRY,
-    })),
-  })),
-};
-
 const getFiguraMetadata = (id: number): FiguraMetadata => {
   if (id <= SPECIAL_FIGURES) {
     const label = `FWC ${(id - 1).toString().padStart(2, '0')}`;
